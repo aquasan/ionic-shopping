@@ -1,0 +1,29 @@
+<!--
+  Generated template for the RecipesPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  
+  <ion-navbar>
+    <ion-title>Recipes</ion-title>
+    <ion-buttons end>
+        <button clear (click)="goToAddRecipe()" ion-button icon-only>  
+            <ion-icon name="add"></ion-icon>
+          </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-list>
+    <button ion-item *ngFor="let recipe of recipes; let i=index" (click)="listRecipe(recipe, i)">
+      {{recipe.name}}
+    </button>
+  </ion-list>
+
+</ion-content>
