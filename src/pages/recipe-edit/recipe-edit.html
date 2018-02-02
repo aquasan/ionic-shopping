@@ -33,14 +33,20 @@
           <ion-option value="Difficult">Difficult</ion-option>
         </ion-select>
       </ion-item>
+      <ion-item *ngIf="recipeForm.get('ingredients')">
+        <ion-label>Ingredients</ion-label>
+      </ion-item>
+
       <ion-grid formArrayName="ingredients">
         <ion-row *ngFor="let ingredient of recipeForm.get('ingredients').controls; let i=index" [formGroupName]="i">
-          <ion-col><ion-input formControlName="name"></ion-input></ion-col>
-          <ion-col><ion-input formControlName="amount"></ion-input></ion-col>
+          <ion-item>
+            <ion-input formControlName="name"></ion-input>
+            <ion-input formControlName="amount"></ion-input>
+          </ion-item>
         </ion-row>
       </ion-grid>
     </ion-list>
     <button ion-button (click)="manageIngredients()" type="button" clear block>Manage Ingredients</button>
-    <button ion-button type="submit" block>{{mode}} Recipe</button>
+    <button ion-button type="submit" block [disabled]="!recipeForm.valid">{{mode}} Recipe</button>
   </form>
 </ion-content>

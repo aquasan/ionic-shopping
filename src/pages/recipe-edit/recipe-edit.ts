@@ -1,7 +1,7 @@
 import { Recipe } from './../../models/recipe.model';
 import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, 
-  ActionSheetController, AlertController } from 'ionic-angular';
+  ActionSheetController, AlertController, ToastController } from 'ionic-angular';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { RecipeService } from '../../services/recipe.service';
 
@@ -22,7 +22,8 @@ export class RecipeEditPage implements OnInit {
     public navParams: NavParams,
     public recipeService: RecipeService,
     public actionSheet: ActionSheetController,
-    public alertCtrl: AlertController) {
+    public alertCtrl: AlertController,
+    public toastCtrl: ToastController) {
   }
 
   ngOnInit() {
@@ -53,28 +54,24 @@ export class RecipeEditPage implements OnInit {
     });
   }
 
-  ionViewWillEnter() {
-    
-  }
-
-  addRecipe() {
-
-  }
-
-  editRecipe() {
-
-  }
-
   submitRecipe() {
     let value = this.recipeForm.value;
     if(this.mode == "Edit"){
       this.recipeService.editRecipe(this.index, value.name, 
         value.description, value.difficulty, value.ingredients);
+      this.toastCtrl.create({
+        message: 'Recipe Edited!',
+        duration: 2000
+      }).present();
       this.navCtrl.popToRoot();
     }
     else {
       this.recipeService.addRecipe(value.name, 
         value.description, value.difficulty, value.ingredients);
+      this.toastCtrl.create({
+        message: 'New Recipe Added!',
+        duration: 2000
+      }).present();
       this.navCtrl.pop();
     }
   }
@@ -104,9 +101,7 @@ export class RecipeEditPage implements OnInit {
         }
       ]
     });
-
     action.present();
-
   }
 
   private showPrompt() {
@@ -131,12 +126,26 @@ export class RecipeEditPage implements OnInit {
         {
           text: 'Add',
           handler: data => {
+            if((data.name == "") || (data.amount == ""))
+            {
+              this.toastCtrl.create({
+                message: 'Invalid Input',
+                duration: 2000
+              }).present();
+
+              return;
+            }
             (<FormArray>this.recipeForm.get('ingredients')).push(
               new FormGroup({
                 name: new FormControl(data.name),
                 amount: new FormControl(data.amount)
               })
             );
+
+            this.toastCtrl.create({
+              message: 'Ingredient added!',
+              duration: 2000
+            }).present();
           }
         }
       ]
